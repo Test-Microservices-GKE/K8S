@@ -1,32 +1,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: react-app
+  name: frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: react-app
+      app: frontend
   template:
     metadata:
       labels:
-        app: react-app
+        app: frontend
     spec:
       containers:
-        - name: react-app
-          image: gcr.io/gke-project-423206/react-app:latest
-          ports:
-            - containerPort: 80
+      - name: frontend
+        image: asia-southeast1-docker.pkg.dev/gke-project-423206/frontend/ui:latest
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: "200m"
+            memory: "256Mi"
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: react-app
+  name: frontend
 spec:
   selector:
-    app: react-app
+    app: frontend
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
+  - protocol: TCP
+    port: 80
+    targetPort: 80
   type: LoadBalancer

@@ -1,38 +1,36 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: comment-mongo
+  name: mongodb
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: comment-mongo
+      app: mongodb
   template:
     metadata:
       labels:
-        app: comment-mongo
+        app: mongodb
     spec:
       containers:
-        - name: mongo
-          image: mongo:latest
-          ports:
-            - containerPort: 27017
-          volumeMounts:
-            - mountPath: /data/db
-              name: mongo-storage
-      volumes:
+      - name: mongodb
+        image: mongo:4.2
+        ports:
+        - containerPort: 27017
+        volumeMounts:
         - name: mongo-storage
-          emptyDir: {}
+          mountPath: /data/db
+      volumes:
+      - name: mongo-storage
+        emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: comment-mongo
+  name: mongodb
 spec:
-  selector:
-    app: comment-mongo
   ports:
-    - protocol: TCP
-      port: 27017
-      targetPort: 27017
-  type: ClusterIP
+  - port: 27017
+    targetPort: 27017
+  selector:
+    app: mongodb
