@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api-gateway
+  labels:
+    app: api-gateway
 spec:
   replicas: 1
   selector:
@@ -13,17 +15,10 @@ spec:
         app: api-gateway
     spec:
       containers:
-      - name: api-gateway
-        image: asia-southeast1-docker.pkg.dev/gke-project-423206/backend/api-gateway:latest
-        ports:
-        - containerPort: 8080
-        resources:
-          limits:
-            cpu: "200m"
-            memory: "256Mi"
-          requests:
-            cpu: "200m"
-            memory: "256Mi"
+        - name: api-gateway
+          image: datuits/devops-api-gateway:latest
+          ports:
+            - containerPort: 8080
 ---
 apiVersion: v1
 kind: Service
@@ -33,7 +28,7 @@ spec:
   selector:
     app: api-gateway
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 8080
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
   type: LoadBalancer

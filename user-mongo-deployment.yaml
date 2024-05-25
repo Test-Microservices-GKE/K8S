@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: comment-mongo-deployment
+  name: user-mongo-deployment
 spec:
   replicas: 1
   selector:
@@ -19,12 +19,12 @@ spec:
         - containerPort: 27017
         env:
         - name: MONGO_INITDB_DATABASE
-          value: comment-service-db
+          value: user-service
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: comment-mongo-service
+  name: user-mongo-service
 spec:
   selector:
     app: mongo

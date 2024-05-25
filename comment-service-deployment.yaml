@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: comment-service
+  labels:
+    app: comment-service
 spec:
   replicas: 1
   selector:
@@ -13,20 +15,13 @@ spec:
         app: comment-service
     spec:
       containers:
-      - name: comment-service
-        image: asia-southeast1-docker.pkg.dev/gke-project-423206/backend/comment-service:latest
-        ports:
-        - containerPort: 8082
-        env:
-        - name: SPRING_DATA_MONGODB_URI
-          value: mongodb://mongodb:27017/comment-db
-        resources:
-          limits:
-            cpu: "500m"
-            memory: "512Mi"
-          requests:
-            cpu: "200m"
-            memory: "256Mi"
+        - name: comment-service
+          image: datuits/devops-comment-service:latest
+          ports:
+            - containerPort: 8082
+          env:
+          - name: SPRING_DATA_MONGODB_URI
+            value: mongodb://comment-mongo-service:27017/comment-service-db
 ---
 apiVersion: v1
 kind: Service
@@ -36,6 +31,7 @@ spec:
   selector:
     app: comment-service
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 8082
+    - protocol: TCP
+      port: 8082
+      targetPort: 8082
+  type: ClusterIP
