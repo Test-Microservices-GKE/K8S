@@ -19,7 +19,7 @@ spec:
         - containerPort: 27017
         env:
         - name: MONGO_INITDB_DATABASE
-          value: user-service-db
+          value: user-service
 ---
 apiVersion: v1
 kind: Service
